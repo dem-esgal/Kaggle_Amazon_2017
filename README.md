@@ -10,15 +10,19 @@ sudo cp metrics.py /usr/local/lib/python2.7/dist-packages/keras/
 ```
 
 - GPU machines?
+
 - explore and decide trade off in optimizing GRAM usage
-larger batch size -> need more gram
-larger input image size -> need more gram
-larger model -> need more gram
-freeze some weights -> reduce gram usage?
+  - larger batch size -> need more gram
+  - larger input image size -> need more gram
+  - larger model -> need more gram
+  - freeze some weights -> reduce gram usage?
 
 - use jpeg vs TIFF
-tiff has 4 channels: RGB + near IR, better?
-problem: most pretrained CNN model only have 3channels + tiff has large size
+  - tiff has 4 channels: RGB + near IR, better?
+  - problem: most pretrained CNN model only have 3channels + tiff has large size
+
+- how to combine models?
+  - use XGBoost? example code: https://www.kaggle.com/opanichev/xgb-starter
 
 # References:
 - Hierarchical Probabilistic Neural Network Language Model (Hierarchical Softmax)
