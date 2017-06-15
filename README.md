@@ -17,12 +17,17 @@ sudo cp metrics.py /usr/local/lib/python2.7/dist-packages/keras/
   - larger model -> need more gram
   - freeze some weights -> reduce gram usage?
 
+- freeze low level weights in pretained model?
+  - https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
+
 - use jpeg vs TIFF
   - tiff has 4 channels: RGB + near IR, better?
   - problem: most pretrained CNN model only have 3channels + tiff has large size
 
 - how to combine models?
   - use XGBoost? example code: https://www.kaggle.com/opanichev/xgb-starter
+  
+
 
 # References:
 - Hierarchical Probabilistic Neural Network Language Model (Hierarchical Softmax)
