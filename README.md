@@ -16,3 +16,4 @@ http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-n
 
 # Graphs:
 ![Image of InceptionV3](https://media.licdn.com/mpr/mpr/AAEAAQAAAAAAAAzbAAAAJGI1MzE2MDA2LTkxY2EtNDk3OC1hM2RjLWM0YTljNDIxMDQ1Zg.png)
+credits:Hvass-Labs/TensorFlow-Tutorials
