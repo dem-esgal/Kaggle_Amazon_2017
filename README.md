@@ -9,6 +9,16 @@ wget https://raw.githubusercontent.com/fchollet/keras/master/keras/metrics.py
 sudo cp metrics.py /usr/local/lib/python2.7/dist-packages/keras/
 ```
 
+- GPU machines?
+- explore and decide trade off in optimizing GRAM usage
+larger batch size -> need more gram
+larger input image size -> need more gram
+larger model -> need more gram
+freeze some weights -> reduce gram usage?
+
+- use jpeg vs TIFF
+tiff has 4 channels: RGB + near IR, better?
+problem: most pretrained CNN model only have 3channels + tiff has large size
 
 # References:
 - Hierarchical Probabilistic Neural Network Language Model (Hierarchical Softmax)
@@ -16,4 +26,3 @@ http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-n
 
 # Graphs:
 ![Image of InceptionV3](https://media.licdn.com/mpr/mpr/AAEAAQAAAAAAAAzbAAAAJGI1MzE2MDA2LTkxY2EtNDk3OC1hM2RjLWM0YTljNDIxMDQ1Zg.png)
-credits:Hvass-Labs/TensorFlow-Tutorials
