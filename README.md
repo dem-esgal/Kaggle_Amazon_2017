@@ -1,6 +1,9 @@
 # Kaggle_Amazon_2017
 Kaggle Amazon
 
+# Data
+
+Image: 4 channels (red, green, blue, and near infrared)
 
 # Problems/Use:
 - Use Better Metric to see the performance
@@ -27,7 +30,10 @@ sudo cp metrics.py /usr/local/lib/python2.7/dist-packages/keras/
 - how to combine models?
   - use XGBoost? example code: https://www.kaggle.com/opanichev/xgb-starter
   
+# Tips:
 
+- to use the multiple GPUs in Keras
+```model = make_parallel(model, 8) #to use 8 GPU```
 
 # References:
 - Hierarchical Probabilistic Neural Network Language Model (Hierarchical Softmax)
