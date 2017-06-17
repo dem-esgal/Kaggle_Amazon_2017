@@ -50,12 +50,12 @@ http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-n
 
 1. KL Divergence
 2. Reading: *Distilling the knowledge in a neural network (by Hinton, Jeff Dean)*
-3. 
+3. Explore using GPU instance
 
 ### Individual work
 
-
-
+Steve:
+- Summary of Hinton's paper
 
 ### Roy present:
 - Task: Label image class, can have multiple label per image
