@@ -51,6 +51,7 @@ http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-n
 1. KL Divergence
 2. Reading: *Distilling the knowledge in a neural network (by Hinton, Jeff Dean)*
 3. Explore using GPU instance
+4. TIFF format and details (open the file and play around)
 
 ### Individual work
 
