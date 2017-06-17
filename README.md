@@ -46,7 +46,18 @@ http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-n
 
 ## 2016-6-17
 
-Roy present:
+### Homework
+
+1. KL Divergence
+2. Reading: *Distilling the knowledge in a neural network (by Hinton, Jeff Dean)*
+3. 
+
+### Individual work
+
+
+
+
+### Roy present:
 - Task: Label image class, can have multiple label per image
 - photos: 40000 train, 60000 test
 - 256x256 jpg, 10k per image
