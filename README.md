@@ -41,3 +41,43 @@ http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-n
 
 # Graphs:
 ![Image of InceptionV3](https://media.licdn.com/mpr/mpr/AAEAAQAAAAAAAAzbAAAAJGI1MzE2MDA2LTkxY2EtNDk3OC1hM2RjLWM0YTljNDIxMDQ1Zg.png)
+
+# Meeting Summary:
+
+## 2016-6-17
+
+Roy present:
+- Task: Label image class, can have multiple label per image
+- photos: 40000 train, 60000 test
+- 256x256 jpg, 10k per image
+- TIFF is 20x larger in size and TIFF has 4 channels
+R, G, B, NearIR
+
+Problem:
+From 3 channel model to 4 channel
+
+## Roy's experience on Invasive Competition
+
+- Run on InceptionV3, ResNet50, VGG.
+
+### combine 3 models output q1, q2, q3:
+
+find output p then minimize sum of KL divergence:
+``` KL(p, q1) + KL(p, q2) + KL(p, q3) ```
+Result becomes better
+
+### Paper sharing
+
+*Distilling the knowledge in a neural network (by Hinton, Jeff Dean)*
+
+#### Ideas from paper
+
+- Train general CNN model
+- Make a covariance matrix of prediction categories
+- Make confusion matrix
+- inctrased concentration of relevant class in train samples, irrlevent class merged to dustbin class
+
+- minimize sum of KL divergence (from generel model + expert model)
+
+## To Do
+- *biased training set*
