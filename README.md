@@ -5,6 +5,9 @@ Kaggle Amazon
 
 Image: 4 channels (red, green, blue, and near infrared)
 
+Labels:
+There are 17 possible tags: agriculture, artisinal_mine, bare_ground, blooming, blow_down, clear, cloudy, conventional_mine, cultivation, habitation, haze, partly_cloudy, primary, road, selective_logging, slash_burn, water
+
 # Problems/Use:
 - Use Better Metric to see the performance
 ```
