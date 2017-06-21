@@ -1,0 +1,11 @@
+this amazon dataset:
+~60000 test img 256x256
+~40000 train img 256x256
+
+cf
+invasive species dataset:
+2295 train img
+1531 test img
+-> scaled down to 224x224, 2295 imgs, VGG16, 262s per epoch
+
+
