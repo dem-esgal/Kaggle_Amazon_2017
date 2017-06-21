@@ -30,10 +30,10 @@ sudo cp metrics.py /usr/local/lib/python2.7/dist-packages/keras/
 - how to combine models?
   - use XGBoost? example code: https://www.kaggle.com/opanichev/xgb-starter
   
-# Tips:
+# Experiences:
 
-- to use the multiple GPUs in Keras
-```model = make_parallel(model, 8) #to use 8 GPU```
+Kin:
+- used p8 (8 GPU) to run Keras model on ResNet50, but the runnung time didn't improve.
 
 # References:
 - Hierarchical Probabilistic Neural Network Language Model (Hierarchical Softmax)
