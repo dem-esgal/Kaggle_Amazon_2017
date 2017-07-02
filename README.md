@@ -8,12 +8,14 @@ Image: 4 channels (red, green, blue, and near infrared)
 Labels:
 There are 17 possible tags: agriculture, artisinal_mine, bare_ground, blooming, blow_down, clear, cloudy, conventional_mine, cultivation, habitation, haze, partly_cloudy, primary, road, selective_logging, slash_burn, water
 
-# Problems/Use:
+# Problems/Solution:
+- Something wrong in the test file naming:
+
+Solution: https://www.kaggle.com/robinkraft/fix-for-test-jpg-vs-tif-filenames
+
 - Use Better Metric to see the performance
-```
-wget https://raw.githubusercontent.com/fchollet/keras/master/keras/metrics.py
-sudo cp metrics.py /usr/local/lib/python2.7/dist-packages/keras/
-```
+
+Suggested Solution: Use F2 Score directly as the metric.
 
 - GPU machines?
 
@@ -22,6 +24,7 @@ sudo cp metrics.py /usr/local/lib/python2.7/dist-packages/keras/
   - larger input image size -> need more gram
   - larger model -> need more gram
   - freeze some weights -> reduce gram usage?
+  
 
 - freeze low level weights in pretained model?
   - https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
@@ -45,10 +48,23 @@ https://blog.keras.io/running-jupyter-notebooks-on-gpu-on-aws-a-starter-guide.ht
 - Hierarchical Probabilistic Neural Network Language Model (Hierarchical Softmax)
 http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-networks-neural-network-language-model
 
+- 'Working' Models
+https://www.kaggle.com/c/planet-understanding-the-amazon-from-space/discussion/33559
+
 # Graphs:
 ![Image of InceptionV3](https://media.licdn.com/mpr/mpr/AAEAAQAAAAAAAAzbAAAAJGI1MzE2MDA2LTkxY2EtNDk3OC1hM2RjLWM0YTljNDIxMDQ1Zg.png)
 
 # Meeting Summary:
+
+## 20170702
+
+Roy
+
+- Freeze all layers but the last one fully connected layers
+- Freeze some layers
+- [the best] no-freezing and train with pre-train model
+
+
 
 ## 2016-6-17
 
