@@ -48,6 +48,9 @@ https://blog.keras.io/running-jupyter-notebooks-on-gpu-on-aws-a-starter-guide.ht
 - Hierarchical Probabilistic Neural Network Language Model (Hierarchical Softmax)
 http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-networks-neural-network-language-model
 
+- 'Working' Models
+https://www.kaggle.com/c/planet-understanding-the-amazon-from-space/discussion/33559
+
 # Graphs:
 ![Image of InceptionV3](https://media.licdn.com/mpr/mpr/AAEAAQAAAAAAAAzbAAAAJGI1MzE2MDA2LTkxY2EtNDk3OC1hM2RjLWM0YTljNDIxMDQ1Zg.png)
 
