@@ -53,6 +53,16 @@ http://cpmarkchang.logdown.com/posts/276263--hierarchical-probabilistic-neural-n
 
 # Meeting Summary:
 
+## 20170702
+
+Roy
+
+- Freeze all layers but the last one fully connected layers
+- Freeze some layers
+- [the best] no-freezing and train with pre-train model
+
+
+
 ## 2016-6-17
 
 ### Homework
