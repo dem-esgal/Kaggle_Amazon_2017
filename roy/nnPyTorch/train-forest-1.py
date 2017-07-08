@@ -121,7 +121,7 @@ def do_predict(net, dataset, batch_size=20, silent=True):
                         dataset,
                         sampler     = SequentialSampler(dataset),  #None,
                         batch_size  = batch_size,
-                        drop_last   = False,
+                        # drop_last   = False,
                         num_workers = 0,
                         pin_memory  = True)
 
@@ -249,7 +249,7 @@ def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
                         train_dataset,
                         sampler = RandomSampler(train_dataset),  ##
                         batch_size  = batch_size,
-                        drop_last   = True,
+                        # drop_last   = True,
                         num_workers = 2,
                         pin_memory  = True)
 
@@ -269,7 +269,7 @@ def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
                         test_dataset,
                         sampler     = SequentialSampler(test_dataset),  #None,
                         batch_size  = batch_size,
-                        drop_last   = False,
+                        # drop_last   = False,
                         num_workers = 0,
                         pin_memory  = True)
 
