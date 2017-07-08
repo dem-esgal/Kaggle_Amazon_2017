@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader, Dataset
 from torch.utils.data.sampler import *
 
 
-TOP_DIR ='/home/ytchan/kaggle/Kaggle_Amazon_2017/input/'
+TOP_DIR ='../../input/'
 TRAIN_JPG_DIR = TOP_DIR+'train-jpg/'
 TRAIN_TIF_DIR = TOP_DIR+'train-tif-v2/'
 TEST_JPG_DIR = TOP_DIR+'test-jpg-additional/'
