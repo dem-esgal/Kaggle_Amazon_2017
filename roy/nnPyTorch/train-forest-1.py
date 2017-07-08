@@ -8,7 +8,7 @@ from net.util import *
 from net.model.resnet import resnet34 as Net
 
 SIZE =  256 #288   #256   #128  #112
-#SRC = 'tif'  
+#SRC = 'tif'
 SRC = 'jpg' #channel
 CH = 'rgb'
 #CH = 'irrg'
@@ -65,7 +65,7 @@ def do_thresholds(probs,labels):
     tryVals = np.arange(0,1,0.005)
     scores = np.zeros(len(tryVals))
 
-    #single threshold 
+    #single threshold
     for i,t in enumerate(tryVals):
         scores[i] = fbeta_score(labels, probs>t, beta=2, average='samples')
 
@@ -215,7 +215,7 @@ def get_model(init_file=None):
 
 def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
 
-    init_file = '/home/ytchan/.torch/models/resnet34-333f7ec4.pth'
+    init_file = '../../input/resnet34-333f7ec4.pth'
 
 
     ## ------------------------------------
@@ -410,7 +410,7 @@ def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
 if __name__ == '__main__':
     print( '%s: calling main function ... ' % os.path.basename(__file__))
 
-    #do_training()
+    do_training()
 
     ## find thres
     #net,_,_ = get_model("../../output/resnet34_jpg_rgb_out/snap/best_acc_0d9288_024.torch")
@@ -428,32 +428,31 @@ if __name__ == '__main__':
 
 
     # do submit
-    net,_,_ = get_model("../../output/resnet34_jpg_rgb_out/snap/best_acc_0d9288_024.torch")
-    test_dataset = KgForestDataset('unlabeled.txt',
-                                    transform=[
-                                        #tif_color_corr,
-                                        img_to_tensor,
-                                        ],
-                                    outfields = [SRC],
-                                    height=SIZE, width=SIZE,
-                                   )
-    logits, probs = do_predict(net, test_dataset, silent=False)
-
-    #from resnet34_tif_rgb
-    #best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
-    #best_thresholds = np.array( [ 0.170, 0.245, 0.150, 0.195, 0.145, 0.230, 0.225, 0.245, 0.190, 0.240,
-    #                              0.095, 0.305, 0.255, 0.135, 0.145, 0.240, 0.060] )
-
-    #from resnet34_tif_irgb
-    #best_threshold = np.ones(len(CLASS_NAMES))* 0.2250    
-    #best_thresholds = np.array([ 0.190, 0.250, 0.225, 0.125, 0.270, 0.235, 0.200, 0.240, 0.240, 0.250,
-    #                             0.120, 0.100, 0.240, 0.150, 0.210, 0.190, 0.050])
-
-    #from resnet34_tif_irgb
-    best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
-    best_thresholds = np.array(
-            [ 0.195, 0.235, 0.230, 0.095, 0.295, 0.215, 0.175, 0.250, 0.220, 0.250,
-              0.130, 0.345, 0.145, 0.170, 0.215, 0.260, 0.090]
-                                 )
-    do_submit(probs, best_thresholds, test_dataset.df.index,  "submit_resnet34_jpg_rgb.csv")
-
+    # net,_,_ = get_model("../../output/resnet34_jpg_rgb_out/snap/best_acc_0d9288_024.torch")
+    # test_dataset = KgForestDataset('unlabeled.txt',
+    #                                 transform=[
+    #                                     #tif_color_corr,
+    #                                     img_to_tensor,
+    #                                     ],
+    #                                 outfields = [SRC],
+    #                                 height=SIZE, width=SIZE,
+    #                                )
+    # logits, probs = do_predict(net, test_dataset, silent=False)
+    #
+    # #from resnet34_tif_rgb
+    # #best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
+    # #best_thresholds = np.array( [ 0.170, 0.245, 0.150, 0.195, 0.145, 0.230, 0.225, 0.245, 0.190, 0.240,
+    # #                              0.095, 0.305, 0.255, 0.135, 0.145, 0.240, 0.060] )
+    #
+    # #from resnet34_tif_irgb
+    # #best_threshold = np.ones(len(CLASS_NAMES))* 0.2250
+    # #best_thresholds = np.array([ 0.190, 0.250, 0.225, 0.125, 0.270, 0.235, 0.200, 0.240, 0.240, 0.250,
+    # #                             0.120, 0.100, 0.240, 0.150, 0.210, 0.190, 0.050])
+    #
+    # #from resnet34_tif_irgb
+    # best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
+    # best_thresholds = np.array(
+    #         [ 0.195, 0.235, 0.230, 0.095, 0.295, 0.215, 0.175, 0.250, 0.220, 0.250,
+    #           0.130, 0.345, 0.145, 0.170, 0.215, 0.260, 0.090]
+    #                              )
+    # do_submit(probs, best_thresholds, test_dataset.df.index,  "submit_resnet34_jpg_rgb.csv")
