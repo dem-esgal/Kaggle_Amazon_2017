@@ -54,6 +54,9 @@ https://www.kaggle.com/c/planet-understanding-the-amazon-from-space/discussion/3
 # Graphs:
 ![Image of InceptionV3](https://media.licdn.com/mpr/mpr/AAEAAQAAAAAAAAzbAAAAJGI1MzE2MDA2LTkxY2EtNDk3OC1hM2RjLWM0YTljNDIxMDQ1Zg.png)
 
+![Image of Resnet - Basic and Bottleneck](https://i.stack.imgur.com/kbiIG.png)
+
+
 # Meeting Summary:
 
 ## 20170702
