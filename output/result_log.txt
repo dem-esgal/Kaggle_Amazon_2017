@@ -1,0 +1,33 @@
+2017-07-12: Best val score: 0.8615
+
+
+Error on AWS:
+ epoch   iter   rate  |  smooth_loss   |  train_loss  (acc)  |  valid_loss  (acc)  | min
+
+----------------------------------------------------------------------------------------
+
+  1.0    1774    0.0100   |  0.1695  | 0.1751  0.7882 | 0.1500  0.8597  |  16.0 min 
+
+Traceback (most recent call last):
+  File "train-forest-1.py", line 422, in <module>
+    do_training()
+  File "train-forest-1.py", line 335, in do_training
+    for it, batch in enumerate(train_loader, 0):
+  File "/usr/local/lib/python3.6/dist-packages/torch/utils/data/dataloader.py", line 303, in __iter__
+    return DataLoaderIter(self)
+  File "/usr/local/lib/python3.6/dist-packages/torch/utils/data/dataloader.py", line 162, in __init__
+    w.start()
+  File "/usr/lib/python3.6/multiprocessing/process.py", line 105, in start
+    self._popen = self._Popen(self)
+  File "/usr/lib/python3.6/multiprocessing/context.py", line 223, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+  File "/usr/lib/python3.6/multiprocessing/context.py", line 277, in _Popen
+    return Popen(process_obj)
+  File "/usr/lib/python3.6/multiprocessing/popen_fork.py", line 20, in __init__
+    self._launch(process_obj)
+  File "/usr/lib/python3.6/multiprocessing/popen_fork.py", line 67, in _launch
+    self.pid = os.fork()
+OSError: [Errno 12] Cannot allocate memory
+ubuntu@ip-172-31-40-3:~/notebooks/Kaggle_Amazon_2017/roy-2/nnPyTorch$ sudo swapon -s
+Filename                                Type            Size    Used    Priority
+ubuntu@ip-172-31-40-3:~/notebooks/Kaggle_Amazon_2017/roy-2/nnPyTorch$ 
