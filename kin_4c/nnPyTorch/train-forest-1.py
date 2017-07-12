@@ -191,8 +191,8 @@ def get_model(init_file=None):
     #        param.requires_grad = True
     #        trainable_paras.append(param)
 
-    #optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=0.001)
-    optimizer = optim.SGD(net.parameters(), lr=0.1, momentum=0.9, weight_decay=0.0005)  ###0.0005
+    optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=0.001)
+    #optimizer = optim.SGD(net.parameters(), lr=0.1, momentum=0.9, weight_decay=0.0005)  ###0.0005
     #optimizer = optim.SGD(trainable_paras, lr=0.1, momentum=0.9, weight_decay=0.0005)  ###0.0005
 
     ## resume from previous ----------------------------------
@@ -238,7 +238,7 @@ def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
     ## dataset ----------------------------------------
     print('** dataset setting **\n')
     num_classes = len(CLASS_NAMES)
-    batch_size  = 20 #48  #96 #96  #80 #96 #96   #96 #32  #96 #128 #
+    batch_size  = 48 #20  #96 #96  #80 #96 #96   #96 #32  #96 #128 #
 
     train_dataset = KgForestDataset('train_35479.txt',
     #train_dataset = KgForestDataset('train_320.txt',
@@ -292,7 +292,8 @@ def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
     # optimiser ----------------------------------
     # LR = StepLR([ (0,0.1),  (10,0.01),  (25,0.005),  (35,0.001), (40,0.0001), (43,-1)])
     # fine tunning
-    LR = StepLR([ (0, 0.01),  (10, 0.005),  (23, 0.001),  (35, 0.0001), (38,-1)])
+    LR = 'Using Adam'
+    # LR = StepLR([ (0, 0.01),  (10, 0.005),  (23, 0.001),  (35, 0.0001), (38,-1)])
     #LR = CyclicLR(base_lr=0.001, max_lr=0.01, step=5., mode='triangular', gamma=1., scale_fn=None, scale_mode='cycle')
 
     num_epoches = 200  #100
@@ -322,10 +323,11 @@ def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
         start = timer()
 
         #---learning rate schduler ------------------------------
-        lr =  LR.get_rate(epoch, num_epoches)
-        if lr<0 :break
+        lr = 0.001
+	#lr =  LR.get_rate(epoch, num_epoches)
+        #if lr<0 :break
 
-        adjust_learning_rate(optimizer, lr)
+        #adjust_learning_rate(optimizer, lr)
         #--------------------------------------------------------
 
         smooth_loss_sum = 0.0
