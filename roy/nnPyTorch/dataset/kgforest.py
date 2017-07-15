@@ -95,7 +95,7 @@ def tif_color_corr(img):
 
     img -= means
     img /= stds
-    img = img*0.25 + 0.5 #scale +- 2SD to (0,1)
+    img = img*0.125 + 0.5 #scale +- 2SD to (0,1)
     return img
 
 class KgForestDataset(Dataset):

@@ -8,10 +8,12 @@ from net.util import *
 from net.model.resnet import resnet34 as Net
 
 SIZE =  256 #288   #256   #128  #112
-#SRC = 'tif'
-SRC = 'jpg' #channel
-CH = 'rgb'
+SRC = 'tif'  
+#SRC = 'jpg' #channel
+#CH = 'rgb'
 #CH = 'irrg'
+CH = 'irrgb'
+NCH=4
 SEED = 123
 
 def loss_func(logits, labels):
@@ -130,8 +132,9 @@ def do_predict(net, dataset, batch_size=20, silent=True):
         #images = batch['tif'][:,1:,:,:] #IR R G B to R G B
         images = batch[SRC]
         if SRC=='tif':
-            if CH == 'rgb' : images = images[:,1:,:,:] #IR R G B to  R G B
-            if CH == 'irrg': images = images[:,:3,:,:] #IR R G B to IR R G
+            if CH == 'rgb'  : images = images[:,1:,:,:] #IR R G B to  R G B
+            if CH == 'irrg' : images = images[:,:3,:,:] #IR R G B to IR R G
+            if CH == 'irrgb': pass
 
         batch_size = len(images)
         tot_samples += batch_size
@@ -163,7 +166,7 @@ def do_submit(prob, thres, imgKeys, outfile = "submit.csv"):
 def get_model(init_file=None):
     print('** net setting **\n')
     num_classes = len(CLASS_NAMES)
-    net = Net(in_shape = (3, SIZE, SIZE), num_classes=num_classes)
+    net = Net(in_shape = (NCH, SIZE, SIZE), num_classes=num_classes)
     print('%s\n\n'%(type(net)))
     print('\n')
 
@@ -205,15 +208,23 @@ def get_model(init_file=None):
                 load_model_weight(net, init_content['model_state'],skip_list=[])
             else:
                 # pretrained weights
-                skip_list = ['fc.weight', 'fc.bias']
-                load_model_weight(net, init_content, skip_list=skip_list)
+                if CH=='irrgb':
+                    skip_list = ['conv1.weight','fc.weight', 'fc.bias']
+                    load_model_weight(net, init_content, skip_list=skip_list)
+                    tmp = init_content['conv1.weight']
+                    if isinstance(tmp, torch.nn.Parameter): tmp = tmp.data
+                    net.state_dict()['conv1.weight'][:,1:,:,:] = tmp
+
+                else:
+                    skip_list = ['fc.weight', 'fc.bias']
+                    load_model_weight(net, init_content, skip_list=skip_list)
         else:
             # full model
             net = init_content
 
     return net, optimizer, start_epoch
 
-def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
+def do_training(out_dir='../../output/resnet34_tif_rgb_4sd_out'):
 
     init_file = '../../input/resnet34-333f7ec4.pth'
 
@@ -329,8 +340,9 @@ def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
             #images = batch['tif'][:,1:,:,:] #IR R G B to R G B
             images = batch[SRC]
             if SRC=='tif':
-                if CH == 'rgb' : images = images[:,1:,:,:] #IR R G B to  R G B
-                if CH == 'irrg': images = images[:,:3,:,:] #IR R G B to IR R G
+                if CH == 'rgb'  : images = images[:,1:,:,:] #IR R G B to  R G B
+                if CH == 'irrg' : images = images[:,:3,:,:] #IR R G B to IR R G
+                if CH == 'irrgb': pass
             labels = batch['label'].float()
             logits, probs = net(Variable(images.cuda()))
             loss  = loss_func(logits, labels.cuda())
@@ -410,10 +422,10 @@ def do_training(out_dir='../../output/resnet34_tif_irrg_out'):
 if __name__ == '__main__':
     print( '%s: calling main function ... ' % os.path.basename(__file__))
 
-    do_training()
+    #do_training(out_dir='../../output/resnet34_tif_irrgb_nocorr_out')
 
     ## find thres
-    #net,_,_ = get_model("../../output/resnet34_jpg_rgb_out/snap/best_acc_0d9288_024.torch")
+    #net,_,_ = get_model("../../output/resnet34_tif_irrgb_nocorr_out/snap/best_acc_0d9221_026.torch")
     #train_dataset = KgForestDataset('labeled.txt',
     #                                transform=[
     #                                    #tif_color_corr,
@@ -428,31 +440,39 @@ if __name__ == '__main__':
 
 
     # do submit
-    # net,_,_ = get_model("../../output/resnet34_jpg_rgb_out/snap/best_acc_0d9288_024.torch")
-    # test_dataset = KgForestDataset('unlabeled.txt',
-    #                                 transform=[
-    #                                     #tif_color_corr,
-    #                                     img_to_tensor,
-    #                                     ],
-    #                                 outfields = [SRC],
-    #                                 height=SIZE, width=SIZE,
-    #                                )
-    # logits, probs = do_predict(net, test_dataset, silent=False)
-    #
-    # #from resnet34_tif_rgb
-    # #best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
-    # #best_thresholds = np.array( [ 0.170, 0.245, 0.150, 0.195, 0.145, 0.230, 0.225, 0.245, 0.190, 0.240,
-    # #                              0.095, 0.305, 0.255, 0.135, 0.145, 0.240, 0.060] )
-    #
-    # #from resnet34_tif_irgb
-    # #best_threshold = np.ones(len(CLASS_NAMES))* 0.2250
-    # #best_thresholds = np.array([ 0.190, 0.250, 0.225, 0.125, 0.270, 0.235, 0.200, 0.240, 0.240, 0.250,
-    # #                             0.120, 0.100, 0.240, 0.150, 0.210, 0.190, 0.050])
-    #
-    # #from resnet34_tif_irgb
-    # best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
-    # best_thresholds = np.array(
-    #         [ 0.195, 0.235, 0.230, 0.095, 0.295, 0.215, 0.175, 0.250, 0.220, 0.250,
-    #           0.130, 0.345, 0.145, 0.170, 0.215, 0.260, 0.090]
-    #                              )
-    # do_submit(probs, best_thresholds, test_dataset.df.index,  "submit_resnet34_jpg_rgb.csv")
+    net,_,_ = get_model("../../output/resnet34_tif_irrgb_nocorr_out/snap/best_acc_0d9221_026.torch")
+    test_dataset = KgForestDataset('unlabeled.txt',
+                                    transform=[
+                                        #tif_color_corr,
+                                        img_to_tensor,
+                                        ],
+                                    outfields = [SRC],
+                                    height=SIZE, width=SIZE,
+                                   )
+    logits, probs = do_predict(net, test_dataset, silent=False)
+
+    ##from resnet34_tif_rgb
+    ##best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
+    ##best_thresholds = np.array( [ 0.170, 0.245, 0.150, 0.195, 0.145, 0.230, 0.225, 0.245, 0.190, 0.240,
+    ##                              0.095, 0.305, 0.255, 0.135, 0.145, 0.240, 0.060] )
+
+    ##from resnet34_tif_irgb
+    ##best_threshold = np.ones(len(CLASS_NAMES))* 0.2250    
+    ##best_thresholds = np.array([ 0.190, 0.250, 0.225, 0.125, 0.270, 0.235, 0.200, 0.240, 0.240, 0.250,
+    ##                             0.120, 0.100, 0.240, 0.150, 0.210, 0.190, 0.050])
+
+    ##from resnet34_tif_irgb
+    #best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
+    #best_thresholds = np.array(
+    #        [ 0.195, 0.235, 0.230, 0.095, 0.295, 0.215, 0.175, 0.250, 0.220, 0.250,
+    #          0.130, 0.345, 0.145, 0.170, 0.215, 0.260, 0.090]
+    #                             )
+
+    #from resnet34_tif_irrgb
+    best_threshold = np.ones(len(CLASS_NAMES))* 0.2100
+    best_thresholds = np.array(
+            [ 0.155, 0.260, 0.225, 0.110, 0.280, 0.240, 0.225, 0.205, 0.205, 0.250,
+                  0.080, 0.145, 0.180, 0.075, 0.130, 0.160, 0.075]
+                                 )
+    do_submit(probs, best_thresholds, test_dataset.df.index,  "submit_resnet34_tif_irrgb.csv")
+
