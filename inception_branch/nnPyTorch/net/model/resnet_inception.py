@@ -23,7 +23,7 @@ class ResNet_Inception(nn.Module):
 
     def forward(self, x_inc, x_res):
         x_inc = self.model_inc(x_inc)
-        x_res = self.model_inc(x_res)
+        x_res = self.model_res(x_res)
         mixed_cat = torch.cat([x_inc, x_res], 1)
         x = self.fc(mixed_cat)
 
