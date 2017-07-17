@@ -126,7 +126,7 @@ def do_thresholds(probs, labels):
     return best_single_thres, best_thresholds
 
 
-def do_predict(net, net_Inception, fc_cat, fc_v2, dataset, batch_size=20, silent=True):
+def do_predict(net, dataset, batch_size=20, silent=True):
     if use_gpu:
         net.cuda().eval()
     else:
@@ -235,8 +235,6 @@ def get_model(init_file_list=None):
             # constrct fc from inception and resnet fc
             ratio_inc = 2048 / 2560
             ratio_res = 512 / 2560
-            import pdb
-            pdb.set_trace()
             net.state_dict()['fc.weight'][:, 0:2048] = init_content_inc[
                 'fc.weight'] * ratio_inc
             net.state_dict()['fc.weight'][:, 2048:] = init_content_res[
@@ -372,10 +370,8 @@ def do_training(out_dir='../../output/inception_and_resnet'):
 
         if use_gpu:
             net.cuda().train()
-            net_Inception.cuda().train()
         else:
             net.train()
-            net_Inception.train()
         num_its = len(train_loader)
         for it, batch in enumerate(train_loader, 0):
             # images = batch['tif'][:,1:,:,:] #IR R G B to R G B
@@ -435,7 +431,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
             else:
                 net.eval()
             test_logits, test_probs = do_predict(
-                net, net_Inception, fc_cat, fc_v2, test_dataset)
+                net, test_dataset)
             test_labels = torch.from_numpy(
                 test_dataset.df[CLASS_NAMES].values.astype(np.float32))
             test_acc = f2_score(test_probs, test_labels.numpy())
@@ -463,7 +459,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
     else:
         net.eval()
     test_logits, test_probs = do_predict(
-        net, net_Inception, fc_cat, fc_v2, test_dataset)
+        net, test_dataset)
     test_labels = torch.from_numpy(
         test_dataset.df[CLASS_NAMES].values.astype(np.float32))
     test_acc = f2_score(test_probs, test_labels.numpy())
