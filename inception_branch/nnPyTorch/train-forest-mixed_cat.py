@@ -235,6 +235,8 @@ def get_model(init_file_list=None):
             # constrct fc from inception and resnet fc
             ratio_inc = 2048 / 2560
             ratio_res = 512 / 2560
+            import pdb
+            pdb.set_trace()
             net.state_dict()['fc.weight'][0:2048, :] = init_content_inc[
                 'fc.weight'] * ratio_inc
             net.state_dict()['fc.weight'][2048:, :] = init_content_res[
