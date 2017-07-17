@@ -237,9 +237,9 @@ def get_model(init_file_list=None):
             ratio_res = 512 / 2560
             import pdb
             pdb.set_trace()
-            net.state_dict()['fc.weight'][0:2048, :] = init_content_inc[
+            net.state_dict()['fc.weight'][:, 0:2048] = init_content_inc[
                 'fc.weight'] * ratio_inc
-            net.state_dict()['fc.weight'][2048:, :] = init_content_res[
+            net.state_dict()['fc.weight'][:, 2048:] = init_content_res[
                 'fc.weight'] * ratio_res
             net.state_dict()['fc.bias'] = (init_content_inc[
                 'fc.bias'] * ratio_inc) + (init_content_res['fc.bias'] * ratio_res)
