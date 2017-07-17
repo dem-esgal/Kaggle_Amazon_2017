@@ -256,7 +256,7 @@ def get_model(init_file_list=None):
 def do_training(out_dir='../../output/inception_and_resnet'):
 
     path_inc = '../../output/inception_tif_NIR_out/snap/best_acc_inception.torch'
-    path_res = '../../output/best_acc_res.torch'
+    path_res = '../../output/best_acc_resnet34.torch'
     init_file_list = [path_inc, path_res]
     # ------------------------------------
     if not os.path.exists(out_dir + '/snap'):
