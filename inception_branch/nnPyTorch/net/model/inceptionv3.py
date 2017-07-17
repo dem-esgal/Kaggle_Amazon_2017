@@ -131,19 +131,18 @@ class Inception3(nn.Module):
         # 1 x 1 x 2048
         x = x.view(x.size(0), -1)
         # 2048
-        '''
+
         x = self.fc(x)
         # 1000 (num_classes)
         
         if self.training and self.aux_logits:
             return x, aux
 
-
         logit = x
         prob  = F.sigmoid(logit)
-        return logit,prob
-        '''
-        return x  # now the output is 2048
+        return logit, prob
+        
+        #  return x  # now the output is 2048
 
 class InceptionA(nn.Module):
 

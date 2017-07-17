@@ -157,7 +157,7 @@ def do_predict(net, dataset, batch_size=20, silent=True):
             if CH == 'irrg':
                 images = images[:, :3, :, :]  # IR R G B to IR R G
             if CH == 'NIR':
-                images = images[:, 0:1, :, :]  # IR R G B to IR R G
+                images = images[:, 0:1, :, :]  # NIR
             if CH == 'irrgb':
                 pass
 
@@ -221,9 +221,9 @@ def get_model(init_file=None):
     #        param.requires_grad = True
     #        trainable_paras.append(param)
 
-    #optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay=0.001)
-    optimizer = optim.SGD(net.parameters(), lr=0.1,
-                          momentum=0.9, weight_decay=0.0005)  # 0.0005
+    optimizer = optim.Adam(net.parameters())
+    # optimizer = optim.SGD(net.parameters(), lr=0.1,
+    #                      momentum=0.9, weight_decay=0.0005)  # 0.0005
     # optimizer = optim.SGD(trainable_paras, lr=0.1, momentum=0.9,
     # weight_decay=0.0005)  ###0.0005
 
@@ -344,9 +344,9 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
     # optimiser ----------------------------------
     # LR = StepLR([ (0,0.1),  (10,0.01),  (25,0.005),  (35,0.001), (40,0.0001), (43,-1)])
     # fine tunning
-    LR = StepLR([(0, 0.01),  (10, 0.005),
-                 (23, 0.001),  (35, 0.0001), (38, -1)])
-    #LR = CyclicLR(base_lr=0.001, max_lr=0.01, step=5., mode='triangular', gamma=1., scale_fn=None, scale_mode='cycle')
+    # LR = StepLR([(0, 0.01),  (10, 0.005),
+    #             (23, 0.001),  (35, 0.0001), (38, -1)])
+    # LR = CyclicLR(base_lr=0.001, max_lr=0.01, step=5., mode='triangular', gamma=1., scale_fn=None, scale_mode='cycle')
 
     num_epoches = 50  # 100
     it_print = 20  # 20
@@ -357,8 +357,8 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
     print('** start training here! **\n')
 
     print(' optimizer=%s\n' % str(optimizer))
-    print(' LR=%s\n\n' % str(LR))
-    print(' epoch   iter   rate  |  smooth_loss   |  train_loss  (acc)  |  valid_loss  (acc)  | min\n')
+    # print(' LR=%s\n\n' % str(LR))
+    print(' epoch   iter  |  smooth_loss   |  train_loss  (acc)  |  valid_loss  (acc)  | min\n')
     print('----------------------------------------------------------------------------------------\n')
 
     smooth_loss = 0.0
@@ -374,11 +374,11 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
         start = timer()
 
         #---learning rate schduler ------------------------------
-        lr = LR.get_rate(epoch, num_epoches)
-        if lr < 0:
-            break
+        # lr = LR.get_rate(epoch, num_epoches)
+        # if lr < 0:
+        #    break
 
-        adjust_learning_rate(optimizer, lr)
+        # adjust_learning_rate(optimizer, lr)
         #--------------------------------------------------------
 
         smooth_loss_sum = 0.0
@@ -396,6 +396,8 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
                     images = images[:, 1:, :, :]  # IR R G B to  R G B
                 if CH == 'irrg':
                     images = images[:, :3, :, :]  # IR R G B to IR R G
+                if CH == 'NIR':
+                    images = images[:, 0:1, :, :]  # NIR
                 if CH == 'irrgb':
                     pass
             labels = batch['label'].float()
@@ -426,8 +428,8 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
                     train_acc = multi_f_measure(probs.data, labels)
                 train_loss = loss.data[0]
 
-                print('\r%5.1f   %5d    %0.4f   |  %0.4f  | %0.4f  %6.4f | ... ' %
-                      (epoch + it / num_its, it + 1, lr,
+                print('\r%5.1f   %5d   |  %0.4f  | %0.4f  %6.4f | ... ' %
+                      (epoch + it / num_its, it + 1,
                        smooth_loss, train_loss, train_acc),
                       end='', flush=True)
 
