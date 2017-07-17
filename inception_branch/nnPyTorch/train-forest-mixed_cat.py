@@ -384,7 +384,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
             labels = batch['label'].float()
 
 
-            output_cat = net(Variable(images.cuda()))
+            output_cat = net(Variable(imagesNIR), Variable(imagesRGB))
             probs = F.sigmoid(output_cat)
             if use_gpu:
                 loss = loss_func(output_cat, labels.cuda())
