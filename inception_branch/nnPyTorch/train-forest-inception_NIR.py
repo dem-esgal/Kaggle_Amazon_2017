@@ -275,7 +275,7 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
 
     # ------------------------------------
     os.makedirs(out_dir + '/snap', exist_ok=True)
-    os.makedirs(out_dir + '/checkpoint', exist_ok=True)
+    # os.makedirs(out_dir + '/checkpoint', exist_ok=True)
 
     print('\n--- [START %s] %s\n\n' %
           (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '-' * 64))
@@ -461,11 +461,11 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
 
         if epoch % epoch_save == epoch_save - 1 or epoch == num_epoches - 1:
             #torch.save(net, out_dir +'/snap/%03d.torch'%(epoch+1))
-            torch.save({
-                'state_dict': net.state_dict(),
-                'optimizer': optimizer.state_dict(),
-                'epoch': epoch,
-            }, out_dir + '/checkpoint/%03d.pth' % (epoch + 1))
+            # torch.save({
+            #     'state_dict': net.state_dict(),
+            #     'optimizer': optimizer.state_dict(),
+            #     'epoch': epoch,
+            # }, out_dir + '/checkpoint/%03d.pth' % (epoch + 1))
             # https://github.com/pytorch/examples/blob/master/imagenet/main.py
 
     #---- end of all epoches -----
