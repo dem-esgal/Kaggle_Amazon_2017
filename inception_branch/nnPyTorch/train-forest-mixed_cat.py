@@ -153,8 +153,8 @@ def do_predict(net, dataset, batch_size=20, silent=True):
         imagesRGB = batch['jpg']
         imagesNIR = batch['tif'][:, 0:1, :, :]
         if use_gpu:
-            imagesRGB.cuda()
-            imagesNIR.cuda()
+            imagesRGB = imagesRGB.cuda()
+            imagesNIR = imagesNIR.cuda()
 
         batch_size = len(images)
         tot_samples += batch_size
@@ -378,8 +378,8 @@ def do_training(out_dir='../../output/inception_and_resnet'):
             imagesRGB = batch['jpg']
             imagesNIR = batch['tif'][:, 0:1, :, :]
             if use_gpu:
-                imagesRGB.cuda()
-                imagesNIR.cuda()
+                imagesRGB = imagesRGB.cuda()
+                imagesNIR = imagesNIR.cuda()
 
             labels = batch['label'].float()
 
