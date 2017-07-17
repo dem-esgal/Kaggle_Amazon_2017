@@ -168,10 +168,16 @@ def do_predict(net, net_Inception, fc_cat, fc_v2, dataset, batch_size=20, silent
 
         # forward
         #ls, ps = net(Variable(images.cuda(),volatile=True))
-        vector1 = net(Variable(images.cuda(), volatile=True))
-        vector2 = net_Inception(Variable(imagesNIR.cuda(), volatile=True))
-        vector2 = fc_v2(vector2)
-        vector_cat = torch.cat([vector1, vector2], 1).cuda()
+        if use_gpu:
+            vector1 = net(Variable(images.cuda(), volatile=True))
+            vector2 = net_Inception(Variable(imagesNIR.cuda(), volatile=True))
+            vector2 = fc_v2(vector2)
+            vector_cat = torch.cat([vector1, vector2], 1)
+        else:
+            vector1 = net(Variable(images, volatile=True))
+            vector2 = net_Inception(Variable(imagesNIR, volatile=True))
+            vector2 = fc_v2(vector2)
+            vector_cat = torch.cat([vector1, vector2], 1)
         # modified by steve
         output_cat = fc_cat(vector_cat).cuda()
         probs_cat = F.sigmoid(output_cat)
