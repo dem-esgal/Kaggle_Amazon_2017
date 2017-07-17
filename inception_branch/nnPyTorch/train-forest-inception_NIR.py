@@ -13,7 +13,7 @@ CH = 'NIR'
 NCH = 1  # 4
 SEED = 123
 
-use_gpu = False
+use_gpu = True
 
 # CH = 'irrgb'
 # SRC = 'jpg' #channel
