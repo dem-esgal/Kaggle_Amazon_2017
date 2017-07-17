@@ -164,12 +164,11 @@ def do_predict(net, dataset, batch_size=20, silent=True):
         # forward
         #ls, ps = net(Variable(images.cuda(),volatile=True))
 
-        output_cat = net(
+        output_cat, probs_cat = net(
             Variable(imagesNIR, volatile=True),
             Variable(imagesRGB, volatile=True)
         )
 
-        probs_cat = F.sigmoid(output_cat)
         # print(probs.data.cpu().numpy().reshape(-1,num_classes))
         logits[start:end] = output_cat.data.cpu(
         ).numpy().reshape(-1, num_classes)
@@ -384,8 +383,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
             labels = batch['label'].float()
 
 
-            output_cat = net(Variable(imagesNIR), Variable(imagesRGB))
-            probs = F.sigmoid(output_cat)
+            output_cat, probs = net(Variable(imagesNIR), Variable(imagesRGB))
             if use_gpu:
                 loss = loss_func(output_cat, labels.cuda())
             else:
