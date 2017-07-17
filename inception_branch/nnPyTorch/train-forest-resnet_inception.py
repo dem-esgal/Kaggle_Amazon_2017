@@ -5,8 +5,8 @@ from dataset.tool import *
 from net.rates import *
 from net.util import *
 
-from net.model.resnet import resnet34 as Net
-from net.model.inceptionv3 import Inception3 as Net_Inception
+from net.model.resnet_comb import resnet34 as Net
+from net.model.inceptionv3_comb import Inception3 as Net_Inception
 
 import torch.nn.functional as F
 import os.path
@@ -171,15 +171,18 @@ def do_predict(net, net_Inception, fc_cat, fc_v2, dataset, batch_size=20, silent
         if use_gpu:
             vector1 = net(Variable(images.cuda(), volatile=True))
             vector2 = net_Inception(Variable(imagesNIR.cuda(), volatile=True))
-            vector2 = fc_v2(vector2)
-            vector_cat = torch.cat([vector1, vector2], 1)
+            vector2 = fc_v2(vector2).cuda()
+            vector_cat = torch.cat([vector1, vector2], 1).cuda()
         else:
             vector1 = net(Variable(images, volatile=True))
             vector2 = net_Inception(Variable(imagesNIR, volatile=True))
             vector2 = fc_v2(vector2)
             vector_cat = torch.cat([vector1, vector2], 1)
         # modified by steve
-        output_cat = fc_cat(vector_cat).cuda()
+        if use_gpu:
+            output_cat = fc_cat(vector_cat).cuda()
+        else:
+            output_cat = fc_cat(vector_cat)
         probs_cat = F.sigmoid(output_cat)
         # print(probs.data.cpu().numpy().reshape(-1,num_classes))
         logits[start:end] = output_cat.data.cpu(
@@ -257,7 +260,8 @@ def get_model(init_file=None):
     if init_file is not None:
         init_content = torch.load(init_file)
         init_content_inception = torch.load(
-            '../../input/inception_v3_google-1a9a5a14.pth')
+            #  '../../input/inception_v3_google-1a9a5a14.pth')
+             '../../output/inception_tif_NIR_out/snap/best_acc_inception.torch')
         if isinstance(init_content, dict):
             if 'epoch' in init_content:
                 # checkpoint
@@ -298,7 +302,7 @@ def get_model(init_file=None):
 
 def do_training(out_dir='../../output/inception_and_resnet'):
 
-    init_file = '../../input/resnet34-333f7ec4.pth'
+    init_file = '../../output/best_acc_resnet34.torch'
 
     # ------------------------------------
     if not os.path.exists(out_dir + '/snap'):
@@ -366,7 +370,8 @@ def do_training(out_dir='../../output/inception_and_resnet'):
     print('\n')
 
     net, net_Inception, optimizer, start_epoch = get_model(init_file)
-    net.cuda()
+    if use_gpu:
+        net.cuda()
 
     # optimiser ----------------------------------
     # LR = StepLR([ (0,0.1),  (10,0.01),  (25,0.005),  (35,0.001), (40,0.0001), (43,-1)])
@@ -411,8 +416,12 @@ def do_training(out_dir='../../output/inception_and_resnet'):
         smooth_loss_sum = 0.0
         smooth_loss_n = 0
 
-        net.cuda().train()
-        net_Inception.cuda().train()
+        if use_gpu:
+            net.cuda().train()
+            net_Inception.cuda().train()
+        else:
+            net.train()
+            net_Inception.train()
         num_its = len(train_loader)
         for it, batch in enumerate(train_loader, 0):
             # images = batch['tif'][:,1:,:,:] #IR R G B to R G B
@@ -426,17 +435,30 @@ def do_training(out_dir='../../output/inception_and_resnet'):
                 if CH == 'irrgb':
                     pass
             labels = batch['label'].float()
-            vector1 = net(Variable(images.cuda()))
-            vector2 = net_Inception(Variable(imagesNIR.cuda()))
-            # modified by steve (simple dimension reduction)
-            fc_v2 = torch.nn.Linear(vector2.size(
-                1), vector1.size(1) // 3).cuda()
-            vector2 = fc_v2(vector2).cuda()
-            vector_cat = torch.cat([vector1, vector2], 1).cuda()
-            fc_cat = torch.nn.Linear(vector_cat.size(1), 17).cuda()
-            output_cat = fc_cat(vector_cat).cuda()
-            probs = F.sigmoid(output_cat)
-            loss = loss_func(output_cat, labels.cuda())
+            if use_gpu:
+                vector1 = net(Variable(images.cuda()))
+                vector2 = net_Inception(Variable(imagesNIR.cuda()))
+                # modified by steve (simple dimension reduction)
+                fc_v2 = torch.nn.Linear(vector2.size(
+                    1), vector1.size(1) // 3).cuda()
+                vector2 = fc_v2(vector2).cuda()
+                vector_cat = torch.cat([vector1, vector2], 1).cuda()
+                fc_cat = torch.nn.Linear(vector_cat.size(1), 17).cuda()
+                output_cat = fc_cat(vector_cat).cuda()
+                probs = F.sigmoid(output_cat)
+                loss = loss_func(output_cat, labels.cuda())
+            else:
+                vector1 = net(Variable(images))
+                vector2 = net_Inception(Variable(imagesNIR))
+                # modified by steve (simple dimension reduction)
+                fc_v2 = torch.nn.Linear(vector2.size(
+                    1), vector1.size(1) // 3)
+                vector2 = fc_v2(vector2)
+                vector_cat = torch.cat([vector1, vector2], 1)
+                fc_cat = torch.nn.Linear(vector_cat.size(1), 17)
+                output_cat = fc_cat(vector_cat)
+                probs = F.sigmoid(output_cat)
+                loss = loss_func(output_cat, labels)
 
             #logits, probs = net(Variable(images.cuda()))
             #loss  = loss_func(logits, labels.cuda())
@@ -455,7 +477,10 @@ def do_training(out_dir='../../output/inception_and_resnet'):
                 smooth_loss_sum = 0.0
                 smooth_loss_n = 0
 
-                train_acc = multi_f_measure(probs.data, labels.cuda())
+                if use_gpu:
+                    train_acc = multi_f_measure(probs.data, labels.cuda())
+                else:
+                    train_acc = multi_f_measure(probs.data, labels)
                 train_loss = loss.data[0]
 
                 print('\r%5.1f   %5d    %0.4f   |  %0.4f  | %0.4f  %6.4f | ... ' %
@@ -470,7 +495,10 @@ def do_training(out_dir='../../output/inception_and_resnet'):
         time = (end - start) / 60
 
         if epoch % epoch_test == epoch_test - 1 or epoch == num_epoches - 1:
-            net.cuda().eval()
+            if use_gpu:
+                net.cuda().eval()
+            else:
+                net.eval()
             test_logits, test_probs = do_predict(
                 net, net_Inception, fc_cat, fc_v2, test_dataset)
             test_labels = torch.from_numpy(
@@ -514,7 +542,10 @@ def do_training(out_dir='../../output/inception_and_resnet'):
     torch.save(net, out_dir + '/snap/final.torch')
 
     net = torch.load(out_dir + '/snap/final.torch')
-    net.cuda().eval()
+    if use_gpu:
+        net.cuda().eval()
+    else:
+        net.eval()
     test_logits, test_probs = do_predict(
         net, net_Inception, fc_cat, fc_v2, test_dataset)
     test_labels = torch.from_numpy(
