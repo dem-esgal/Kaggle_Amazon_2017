@@ -222,8 +222,8 @@ def get_model(init_file_list=None):
     start_epoch = 0
     if init_file_list is not None:
         if len(init_file_list) == 2:
-            init_content_inc = torch.load(init_file_list[0])
-            init_content_res = torch.load(init_file_list[1])
+            init_content_inc = torch.load(init_file_list[0]).state_dict()
+            init_content_res = torch.load(init_file_list[1]).state_dict()
             # load inception
             skip_list = ['fc.weight', 'fc.bias']
             load_model_weight(
