@@ -17,7 +17,7 @@ class ResNet_Inception(nn.Module):
 
         super(ResNet_Inception, self).__init__()
         self.model_inc = Inception3(in_shape_inc, num_classes=num_classes)
-        self.model_res = resnet34(in_shape_res, num_classes=num_classes)
+        self.model_res = resnet34(in_shape=in_shape_res, num_classes=num_classes)
         #2560 = 2048(inception feature) + 512(resnet feature)
         self.fc = nn.Linear(2560, num_classes)
 
