@@ -450,8 +450,8 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
                 torch.from_numpy(test_logits)), test_labels).data[0]
 
             print('\r', end='', flush=True)
-            print('%5.1f   %5d    %0.4f   |  %0.4f  | %0.4f  %6.4f | %0.4f  %6.4f  |  %3.1f min \n' %
-                  (epoch + 1, it + 1, lr, smooth_loss, train_loss, train_acc, test_loss, test_acc, time))
+            print('%5.1f   %5d   |  %0.4f  | %0.4f  %6.4f | %0.4f  %6.4f  |  %3.1f min \n' %
+                  (epoch + 1, it + 1, smooth_loss, train_loss, train_acc, test_loss, test_acc, time))
 
             if test_acc > best_acc:
                 best_acc = test_acc
