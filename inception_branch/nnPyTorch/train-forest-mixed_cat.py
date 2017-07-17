@@ -64,7 +64,7 @@ def augment(x, u=0.75):
 
         x = randomFlip(x, u=0.5)
         x = randomTranspose(x, u=0.5)
-        x = randomContrast(x, limit=0.2, u=0.5)
+        # x = randomContrast(x, limit=0.2, u=0.5)
         # x = randomSaturation(x, limit=0.2, u=0.5),
         # x = randomFilter(x, limit=0.5, u=0.2)
     return x
