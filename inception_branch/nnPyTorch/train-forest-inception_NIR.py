@@ -455,9 +455,9 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
 
             if test_acc > best_acc:
                 best_acc = test_acc
-                # torch.save(net, out_dir + '/snap/best_acc_inception_%s_%03d.torch' %
-                #            (("%.4f" % best_acc).replace('.', 'd'), epoch + 1))
-                torch.save(net, out_dir + '/snap/best_acc_inception.torch')
+                torch.save(net, out_dir + '/snap/best_acc_inception_%s_%03d.torch' %
+                           (("%.4f" % best_acc).replace('.', 'd'), epoch + 1))
+                # torch.save(net, out_dir + '/snap/best_acc_inception.torch')
 
         # if epoch % epoch_save == epoch_save - 1 or epoch == num_epoches - 1:
             #torch.save(net, out_dir +'/snap/%03d.torch'%(epoch+1))
