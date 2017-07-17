@@ -459,7 +459,7 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
                 #            (("%.4f" % best_acc).replace('.', 'd'), epoch + 1))
                 torch.save(net, out_dir + '/snap/best_acc_inception.torch')
 
-        if epoch % epoch_save == epoch_save - 1 or epoch == num_epoches - 1:
+        # if epoch % epoch_save == epoch_save - 1 or epoch == num_epoches - 1:
             #torch.save(net, out_dir +'/snap/%03d.torch'%(epoch+1))
             # torch.save({
             #     'state_dict': net.state_dict(),
@@ -468,7 +468,7 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
             # }, out_dir + '/checkpoint/%03d.pth' % (epoch + 1))
             # https://github.com/pytorch/examples/blob/master/imagenet/main.py
 
-    #---- end of all epoches -----
+            #---- end of all epoches -----
     end0 = timer()
     time0 = (end0 - start0) / 60
 
