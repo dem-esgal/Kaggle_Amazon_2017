@@ -331,7 +331,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
                  (23, 0.001),  (35, 0.0001), (38, -1)])
     #LR = CyclicLR(base_lr=0.001, max_lr=0.01, step=5., mode='triangular', gamma=1., scale_fn=None, scale_mode='cycle')
 
-    num_epoches = 1  # 100
+    num_epoches = 80  # 100
     it_print = 20  # 20
     epoch_test = 1
     epoch_save = 5
