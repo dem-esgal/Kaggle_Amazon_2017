@@ -156,7 +156,7 @@ def do_predict(net, dataset, batch_size=20, silent=True):
             imagesRGB = imagesRGB.cuda()
             imagesNIR = imagesNIR.cuda()
 
-        batch_size = len(images)
+        batch_size = len(imagesRGB)
         tot_samples += batch_size
         start = tot_samples - batch_size
         end = tot_samples
