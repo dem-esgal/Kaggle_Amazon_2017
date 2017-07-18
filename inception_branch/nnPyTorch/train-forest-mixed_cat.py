@@ -255,7 +255,8 @@ def do_training(out_dir='../../output/inception_and_resnet'):
     init_file_list = [path_inc, path_res]
 
     if os.path.exists('../../output/inception_and_resnet/snap/mixed_cat_best.torch'):
-        init_file_list = ['../../output/inception_and_resnet/snap/mixed_cat_best.torch']
+        init_file_list = [
+            '../../output/inception_and_resnet/snap/mixed_cat_best.torch']
     # ------------------------------------
     if not os.path.exists(out_dir + '/snap'):
         os.makedirs(out_dir + '/snap')
@@ -273,7 +274,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
     num_classes = len(CLASS_NAMES)
     batch_size = 20  # 48  #96 #96  #80 #96 #96   #96 #32  #96 #128 #
 
-    train_dataset = KgForestDataset('train_320.txt', # 'train_35479.txt',
+    train_dataset = KgForestDataset('train_320.txt',  # 'train_35479.txt',
                                     # train_dataset =
                                     # KgForestDataset('train_320.txt',
                                     transform=[
@@ -293,7 +294,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
         num_workers=2,
         pin_memory=True)
 
-    test_dataset = KgForestDataset('val_320.txt', # 'val_5000.txt',
+    test_dataset = KgForestDataset('val_320.txt',  # 'val_5000.txt',
                                    # test_dataset =
                                    # KgForestDataset('val_320.txt',
                                    height=SIZE, width=SIZE,
@@ -380,7 +381,6 @@ def do_training(out_dir='../../output/inception_and_resnet'):
                 imagesNIR = imagesNIR.cuda()
 
             labels = batch['label'].float()
-
 
             output_cat, probs = net(Variable(imagesNIR), Variable(imagesRGB))
             if use_gpu:
@@ -475,30 +475,32 @@ if __name__ == '__main__':
     do_training(out_dir='../../output/inception_and_resnet')
 
     # find thres
-    #net,_,_ = get_model("../../output/resnet34_tif_irrgb_nocorr_out/snap/best_acc_0d9221_026.torch")
-    # train_dataset = KgForestDataset('labeled.txt',
-    #                                transform=[
-    #                                    #tif_color_corr,
-    #                                    img_to_tensor,
-    #                                    ],
-    #                                outfields = ['tif','jpg', 'label'],
-    #                                height=SIZE, width=SIZE,
-    #                               )
-    #logits, probs = do_predict(net, train_dataset, silent=False)
-    #labels = train_dataset.df[CLASS_NAMES].values.astype(np.float32)
-    #do_thresholds(probs, labels)
+    net, _, _ = get_model(
+        "../../output/inception_and_resnet/snap/mixed_cat_best.torch")
+    train_dataset = KgForestDataset('labeled_10.txt',  # 'labeled.txt',
+                                    transform=[
+                                        # tif_color_corr,
+                                        img_to_tensor,
+                                    ],
+                                    outfields=['tif', 'jpg', 'label'],
+                                    height=SIZE, width=SIZE,
+                                    )
+    logits, probs = do_predict(net, train_dataset, silent=False)
+    labels = train_dataset.df[CLASS_NAMES].values.astype(np.float32)
+    best_single_thres, best_all_thres = do_thresholds(probs, labels)
 
     # do submit
-    #net,_,_ = get_model("../../output/resnet34_tif_irrgb_nocorr_out/snap/best_acc_0d9221_026.torch")
-    # test_dataset = KgForestDataset('unlabeled.txt',
-    #                                transform=[
-    #                                    #tif_color_corr,
-    #                                    img_to_tensor,
-    #                                    ],
-    #                                outfields = ['tif','jpg'],
-    #                                height=SIZE, width=SIZE,
-    #                               )
-    #logits, probs = do_predict(net, test_dataset, silent=False)
+    # net, _, _ = get_model(
+    #     "../../output/inception_and_resnet/snap/mixed_cat_best.torch")
+    test_dataset = KgForestDataset('unlabeled_10.txt',  # 'unlabeled.txt',
+                                   transform=[
+                                       # tif_color_corr,
+                                       img_to_tensor,
+                                   ],
+                                   outfields=['tif', 'jpg'],
+                                   height=SIZE, width=SIZE,
+                                   )
+    logits, probs = do_predict(net, test_dataset, silent=False)
 
     # from resnet34_tif_rgb
     ###best_threshold = np.ones(len(CLASS_NAMES))* 0.2200
@@ -523,4 +525,4 @@ if __name__ == '__main__':
     #        [ 0.155, 0.260, 0.225, 0.110, 0.280, 0.240, 0.225, 0.205, 0.205, 0.250,
     #              0.080, 0.145, 0.180, 0.075, 0.130, 0.160, 0.075]
     #                             )
-    #do_submit(probs, best_thresholds, test_dataset.df.index,  "submit_resnet34_tif_irrgb.csv")
+    do_submit(probs, best_all_thres, test_dataset.df.index,  "submit_mixed_cat.csv")
