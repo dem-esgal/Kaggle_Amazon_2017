@@ -273,7 +273,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
     num_classes = len(CLASS_NAMES)
     batch_size = 20  # 48  #96 #96  #80 #96 #96   #96 #32  #96 #128 #
 
-    train_dataset = KgForestDataset('train_35479.txt',
+    train_dataset = KgForestDataset('train_320.txt', # 'train_35479.txt',
                                     # train_dataset =
                                     # KgForestDataset('train_320.txt',
                                     transform=[
@@ -293,7 +293,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
         num_workers=2,
         pin_memory=True)
 
-    test_dataset = KgForestDataset('val_5000.txt',
+    test_dataset = KgForestDataset('val_320.txt', # 'val_5000.txt',
                                    # test_dataset =
                                    # KgForestDataset('val_320.txt',
                                    height=SIZE, width=SIZE,
