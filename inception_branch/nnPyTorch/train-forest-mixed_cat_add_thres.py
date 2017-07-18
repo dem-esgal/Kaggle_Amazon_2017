@@ -415,8 +415,6 @@ def do_training(out_dir='../../output/inception_and_resnet'):
                       (epoch + it / num_its, it + 1, lr,
                        smooth_loss, train_loss, train_acc),
                       )
-            # modified by steve
-            # end='',flush=True
 
         #---- end of one epoch -----
         end = timer()
@@ -442,7 +440,8 @@ def do_training(out_dir='../../output/inception_and_resnet'):
 
             if test_acc > best_acc:
                 best_acc = test_acc
-                torch.save(net, out_dir + '/snap/mixed_cat_best.torch')
+                torch.save(net, out_dir + '/snap/mixed_cat_best.torch' %
+                           (("%.4f" % best_acc).replace('.', 'd'), epoch + 1))
 
     #---- end of all epoches -----
     end0 = timer()
@@ -454,10 +453,13 @@ def do_training(out_dir='../../output/inception_and_resnet'):
         net.cuda().eval()
     else:
         net.eval()
-    test_logits, test_probs = do_predict(
-        net, test_dataset)
+    test_logits, test_probs = do_predict(net, test_dataset)
     test_labels = torch.from_numpy(
         test_dataset.df[CLASS_NAMES].values.astype(np.float32))
+
+     best_single_thres_epoch, best_thresholds_epoch  = do_thresholds(test_probs, test_labels)
+
+
     test_acc = f2_score(test_probs, test_labels.numpy())
     test_loss = loss_func(torch.autograd.Variable(
         torch.from_numpy(test_logits)), test_labels).data[0]
