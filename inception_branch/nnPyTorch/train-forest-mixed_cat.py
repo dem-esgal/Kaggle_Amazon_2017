@@ -449,7 +449,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
     time0 = (end0 - start0) / 60
 
     # check : load model and re-test
-    net = torch.load(out_dir + '/snap/final_best.torch')
+    net = torch.load(out_dir + '/snap/mixed_cat_best.torch')
     if use_gpu:
         net.cuda().eval()
     else:
