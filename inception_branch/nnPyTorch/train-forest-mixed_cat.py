@@ -242,7 +242,7 @@ def get_model(init_file_list=None):
                 'fc.bias'] * ratio_inc) + (init_content_res['fc.bias'] * ratio_res)
 
         if len(init_file_list) == 1:
-            init_content = torch.load(init_file_list[0])
+            init_content = torch.load(init_file_list[0]).state_dict()
             load_model_weight(net, init_content)
 
     return net, optimizer, start_epoch
@@ -463,7 +463,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
         torch.from_numpy(test_logits)), test_labels).data[0]
 
     print('\n')
-    print('%s:\n' % (out_dir + '/snap/final.torch'))
+    print('%s:\n' % (out_dir + '/snap/mixed_cat_best.torch'))
     print('\tall time to train=%0.1f min\n' % (time0))
     print('\ttest_loss=%f, test_acc=%f\n' % (test_loss, test_acc))
 
