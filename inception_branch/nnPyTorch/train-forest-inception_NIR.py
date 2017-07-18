@@ -273,6 +273,9 @@ def do_training(out_dir='../../output/inception_tif_NIR_out'):
 
     init_file = '../../input/inception_v3_google-1a9a5a14.pth'
 
+    if os.path.exists('../../output/inception_tif_NIR_out/snap/best_acc_inception.torch'):
+        init_file = '../../output/inception_tif_NIR_out/snap/best_acc_inception.torch'
+
     # ------------------------------------
     os.makedirs(out_dir + '/snap', exist_ok=True)
     # os.makedirs(out_dir + '/checkpoint', exist_ok=True)
@@ -514,8 +517,8 @@ if __name__ == '__main__':
     #do_thresholds(probs, labels)
 
     # do submit
-    # net, _, _ = get_model(
-    #     "../../output/resnet34_tif_irrgb_nocorr_out/snap/best_acc_0d9221_026.torch")
+    net, _, _ = get_model(
+        '../../output/inception_tif_NIR_out/snap/best_acc_inception.torch')
     test_dataset = KgForestDataset('unlabeled.txt',
                                    transform=[
                                        # tif_color_corr,
