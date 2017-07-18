@@ -242,12 +242,8 @@ def get_model(init_file_list=None):
                 'fc.bias'] * ratio_inc) + (init_content_res['fc.bias'] * ratio_res)
 
         if len(init_file_list) == 1:
-            if isinstance(init_content, dict):
-                init_content = torch.load(init_file_list[0])
-                load_model_weight(net, init_content)
-            else:
-                # full model
-                net = init_content
+            init_content = torch.load(init_file_list[0])
+            load_model_weight(net, init_content)
 
     return net, optimizer, start_epoch
 
@@ -257,6 +253,9 @@ def do_training(out_dir='../../output/inception_and_resnet'):
     path_inc = '../../output/inception_tif_NIR_out/snap/best_acc_inception.torch'
     path_res = '../../output/best_acc_resnet34.torch'
     init_file_list = [path_inc, path_res]
+
+    if os.path.exists('../../output/inception_and_resnet/snap/mixed_cat_best.torch'):
+        init_file_list = ['../../output/inception_and_resnet/snap/mixed_cat_best.torch']
     # ------------------------------------
     if not os.path.exists(out_dir + '/snap'):
         os.makedirs(out_dir + '/snap')
@@ -331,7 +330,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
                  (23, 0.001),  (35, 0.0001), (38, -1)])
     #LR = CyclicLR(base_lr=0.001, max_lr=0.01, step=5., mode='triangular', gamma=1., scale_fn=None, scale_mode='cycle')
 
-    num_epoches = 50  # 100
+    num_epoches = 1  # 100
     it_print = 20  # 20
     epoch_test = 1
     epoch_save = 5
@@ -443,7 +442,7 @@ def do_training(out_dir='../../output/inception_and_resnet'):
 
             if test_acc > best_acc:
                 best_acc = test_acc
-                torch.save(net, out_dir + '/snap/final_best.torch' %
+                torch.save(net, out_dir + '/snap/mixed_cat_best.torch' %
                            (("%.4f" % best_acc).replace('.', 'd'), epoch + 1))
 
     #---- end of all epoches -----
